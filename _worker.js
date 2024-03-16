@@ -1,4 +1,3 @@
-
 // 定义一个名为 mytoken 的变量，并将 'passwd' 作为默认的读写权限1
 let mytoken= 'passwd';
 
@@ -128,16 +127,7 @@ function 下载bat(域名,token) {
 	  `rem %~nx1表示第一个参数的文件名和扩展名`,
 	  `set "FILENAME=%~nx1"`,
 	  ``,
-	  `rem 使用 PowerShell 命令读取文件的前 3 个字节`,
-	  `for /f "delims=" %%i in ('powershell -command "$content = (Get-Content -Path '%cd%/%FILENAME%' -Encoding Default -ReadCount 3) -join ''"') do set "FILE_ENCODING=%%i"`,
-	  ``,
-	  `rem 如果文件编码不是 UTF-8，则转换为 UTF-8`,
-	  `if not "%FILE_ENCODING%"=="EFBBBF" (`,
-	  `  rem 使用 PowerShell 命令将文件转换为 UTF-8`,
-	  `  for /f "delims=" %%i in ('powershell -command "$content = (Get-Content -Path '%cd%/%FILENAME%' -Encoding Default) | Set-Content -Path '%cd%/%FILENAME%' -Encoding UTF8 -Force"') do set "FILE_ENCODING=%%i"`,
-	  `)`,
-	  ``,
-	  `rem 使用 PowerShell 命令读取文件的内容，将内容转换为 UTF8 并进行 Base64 编码`,
+	  `rem PowerShell命令读取文件的前65行内容，将内容转换为UTF8并进行base64编码`,
 	  `for /f "delims=" %%i in ('powershell -command "$content = ((Get-Content -Path '%cd%/%FILENAME%' -Encoding UTF8) | Select-Object -First 65) -join [Environment]::NewLine; [convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($content))"') do set "BASE64_TEXT=%%i"`,
 	  ``,
 	  `rem 将内容保存到response.txt`,
@@ -148,7 +138,7 @@ function 下载bat(域名,token) {
 	  ``,
 	  `rem 显示请求的响应 `,
 	  `rem powershell -Command "(Invoke-WebRequest -Uri '%URL%').Content"`,
-	  `start microsoft-edge:%URL%`,
+	  `start %URL%`,
 	  `endlocal`,
 	  ``,
 	  `echo 更新数据完成,倒数5秒后自动关闭窗口...`,
